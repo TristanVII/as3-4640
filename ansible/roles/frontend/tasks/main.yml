@@ -1,0 +1,45 @@
+---
+# tasks file for webserver Source: https://spacelift.io/blog/ansible-roles
+- name: Update and upgrade apt
+  tags: frontend
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    upgrade: true
+
+# Intall nginx
+- name: Install Nginx
+  tags: frontend
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+
+# Moving the nginx conf to the appropriate directory on vm
+- name: Copy the Nginx configuration file to the host
+  tags: frontend
+  copy:
+    src: files/hello.conf
+    dest: "{{ sites_available_path }}/default"
+
+# Linking the files to enable nginx conf
+- name: Create link to the new config to enable it
+  tags: frontend
+  file:
+    dest: "{{ sites_enabled_path }}/default"
+    src: "{{ sites_available_path }}/default"
+    state: link
+
+# Creating nginx directory
+- name: Create Nginx directory
+  tags: frontend
+  ansible.builtin.file:
+    path: "{{ nginx_custom_directory }}"
+    state: directory
+
+# Copying the index.html to the nginx directory created
+- name: Copy index.html to the Nginx directory
+  tags: frontend
+  copy:
+    src: files/index.html
+    dest: "{{ nginx_custom_directory }}"
+  notify: Restart the Nginx service

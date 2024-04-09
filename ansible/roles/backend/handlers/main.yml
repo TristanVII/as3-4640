@@ -1,0 +1,11 @@
+---
+# Restarts Caddy on change
+- name: restart caddy
+  service:
+    name: caddy
+    state: restarted
+
+- name: restart hello-server
+  service:
+    name: hello-server
+    state: restarted

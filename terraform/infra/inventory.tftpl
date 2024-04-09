@@ -1,0 +1,11 @@
+frontend:
+  hosts:
+%{ for ip in public_ip ~}
+    ${ip}:
+%{ endfor ~}
+
+backend:
+  hosts:
+%{ for ip in private_ip ~}
+    ${ip}:
+%{ endfor ~}    

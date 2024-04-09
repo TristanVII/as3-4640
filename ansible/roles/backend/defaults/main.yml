@@ -1,0 +1,5 @@
+---
+# Default variables used for Backend 
+
+backend_service_path: /var/www/backend
+backend_log_path: /var/log/hello-server

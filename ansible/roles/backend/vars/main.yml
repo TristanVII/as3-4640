@@ -1,0 +1,4 @@
+---
+# Backend variables used within project
+service_directory: /etc/systemd/system
+caddy_directory: /etc/caddy

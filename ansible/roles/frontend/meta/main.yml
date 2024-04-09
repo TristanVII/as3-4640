@@ -1,0 +1,34 @@
+---
+# This is an Ansible Galaxy metadata file
+galaxy_info:
+  # Author of the Ansible role
+  author: Tristan Davis
+
+ # Brief description of the role
+  description: Installs and configures Nginx
+
+ # Company or organization the role is associated with
+  company: BCIT
+
+ # License under which the role is distributed
+  license: Apache-2.0
+
+ # Name of the Ansible role
+  role_name: frontend
+
+ # Minimum Ansible version required to run the role
+  min_ansible_version: "2.1"
+
+ # List of platforms the role is compatible with
+  platforms:
+    - name: Ubuntu
+
+ # List of tags associated with the role
+  galaxy_tags:
+    - nginx
+    - webserver
+    - development
+    - test
+
+ # List of dependencies for the role
+dependencies: []

@@ -1,0 +1,87 @@
+---
+- name: Update and upgrade apt
+  tags: backend
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+    upgrade: true
+
+# Dowload GPG key for caddy
+- name: Download GPG key
+  tags: backend
+  ansible.builtin.get_url:
+    url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+    dest: /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+    mode: "0755"
+
+# Download Caddy repository
+- name: Add Caddy repository
+  tags: backend
+  ansible.builtin.get_url:
+    url: https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt
+    dest: /etc/apt/sources.list.d/caddy-stable.list
+    mode: "0755"
+
+# apt install Caddy
+- name: Install Caddy
+  tags: backend
+  ansible.builtin.apt:
+    name: caddy
+    state: present
+
+- name: Configure Caddy
+  tags: backend
+  copy:
+    src: files/Caddyfile
+    dest: "{{ caddy_directory }}/Caddyfile"
+  notify:
+    - restart caddy
+
+- name: Create backend directory
+  tags: backend
+  ansible.builtin.file:
+    owner: ubuntu
+    path: "{{ backend_service_path }}"
+    state: directory
+    mode: "0755"
+
+- name: Create log directory
+  tags: backend
+  ansible.builtin.file:
+    owner: ubuntu
+    path: "{{ backend_log_path }}"
+    state: directory
+    mode: "0755"
+
+- name: Create log file
+  ansible.builtin.file:
+    path: "{{ backend_log_path }}/backend.log"
+    state: touch
+    mode: u=rw,g=r,o=r
+
+- name: Copy hello-server binary
+  tags: backend
+  copy:
+    src: hello-server
+    dest: "{{ backend_service_path }}/hello-server"
+    mode: "0755"
+
+- name: Configure hello-server service
+  tags: backend
+  copy:
+    src: files/hello-server.service
+    dest: "{{ service_directory }}/hello-server.service"
+  notify:
+    - restart hello-server
+
+- name: Start Caddy
+  tags: backend
+  service:
+    name: caddy
+    state: started
+
+- name: Start hello-server
+  tags: backend
+  service:
+    name: hello-server
+    state: started

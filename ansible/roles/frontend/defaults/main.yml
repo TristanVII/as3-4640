@@ -1,0 +1,5 @@
+---
+# Default values for front-end
+
+sites_available_path: /etc/nginx/sites-available
+sites_enabled_path: /etc/nginx/sites-enabled
